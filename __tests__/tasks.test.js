@@ -65,26 +65,14 @@ describe('items', () => {
     });
   });
 
-  it('#GET /api/v1/tasks returns all items associated with the authenticated User', async () => {
-    // create a user
-    const [agent, user] = await registerAndLogin();
-    // add a second user with items
-    const user2 = await UserService.create(mockUser2);
-    const user1Task = await Task.insert({
-      description: 'test task 1',
-      user_id: user.id,
-    });
+  it('#POST api/v1/tasks all list items', async () => {
+    const [agent] = await registerAndLogin();
+    const task = { description: 'clean dog bed', completed: false };
+    const res = await agent.post('/api/v1/tasks').send(task);
+    expect(res.status).toBe(200);
 
-    await Task.insert({
-      description: 'test task 2',
-      user_id: user2.id,
-    });
-
-    
     const resp = await agent.get('/api/v1/tasks');
-    expect(resp.status).toEqual(200);
-    expect(resp.body).toEqual([user1Task]);
-    console.log('resp.body', resp.body);
+    expect(resp.body).toEqual([{ ...task, id: '1', user_id: '1' }]);
   });
 
 });
