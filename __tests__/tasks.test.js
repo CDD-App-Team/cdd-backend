@@ -12,6 +12,13 @@ const mockUser = {
   password: '12345',
 };
 
+const mockUser2 = {
+  firstName: 'Test2',
+  lastName: 'User2',
+  email: 'test2@example.com',
+  password: '12345',
+};
+
 const registerAndLogin = async (userProps = {}) => {
   const password = userProps.password ?? mockUser.password;
 
@@ -39,7 +46,7 @@ describe('items', () => {
   it('example test - delete me!', () => {
     expect(1).toEqual(1);
   });
-  
+
   it('#POST /api/v1/tasks creates new tasks for the current user', async () => {
     const [agent, user] = await registerAndLogin();
 
@@ -56,6 +63,28 @@ describe('items', () => {
       description: expect.any(String),
       completed: false,
     });
+  });
+
+  it('#GET /api/v1/tasks returns all items associated with the authenticated User', async () => {
+    // create a user
+    const [agent, user] = await registerAndLogin();
+    // add a second user with items
+    const user2 = await UserService.create(mockUser2);
+    const user1Task = await Task.insert({
+      description: 'test task 1',
+      user_id: user.id,
+    });
+
+    await Task.insert({
+      description: 'test task 2',
+      user_id: user2.id,
+    });
+
+    
+    const resp = await agent.get('/api/v1/tasks');
+    expect(resp.status).toEqual(200);
+    expect(resp.body).toEqual([user1Task]);
+    console.log('resp.body', resp.body);
   });
 
 });
