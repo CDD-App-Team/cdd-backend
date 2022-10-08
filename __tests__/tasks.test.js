@@ -3,7 +3,6 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const UserService = require('../lib/services/UserService');
-const Task = require('../lib/models/Task');
 
 const mockUser = {
   firstName: 'Test',
@@ -12,12 +11,6 @@ const mockUser = {
   password: '12345',
 };
 
-const mockUser2 = {
-  firstName: 'Test2',
-  lastName: 'User2',
-  email: 'test2@example.com',
-  password: '12345',
-};
 
 const registerAndLogin = async (userProps = {}) => {
   const password = userProps.password ?? mockUser.password;
