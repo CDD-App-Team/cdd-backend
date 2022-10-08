@@ -65,7 +65,7 @@ describe('items', () => {
     });
   });
 
-  it('#POST api/v1/tasks all list items', async () => {
+  it('#POST api/v1/tasks fetches all tasks', async () => {
     const [agent] = await registerAndLogin();
     const task = { description: 'clean dog bed', completed: false };
     const res = await agent.post('/api/v1/tasks').send(task);
